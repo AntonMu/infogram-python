@@ -4,7 +4,7 @@ except ImportError:
     import json
 import requests
 import six
-import urllib
+from urllib.parse import quote  
 import hmac
 import base64
 
@@ -27,16 +27,17 @@ class Infogram(object):
         exception.args = (message + ': ' + exception.args[0],) + exception.args[1:]
 
     def _decode_params(self, params):
-        return '&'.join(['{}={}'.format(k, urllib.quote(params[k], '')) for k in OrderedDict(sorted(params.items()))])
+        return '&'.join(['{}={}'.format(k, quote(params[k], '')) for k in OrderedDict(sorted(params.items()))])
 
     def _sign(self, method, path, params):
         signatureBase = '&'.join(filter(None, [
             method.upper(),
-            urllib.quote((self.url + path).replace('+', ' '), ''),
-            urllib.quote(self._decode_params(params), '') if params else None,
+            quote((self.url + path).replace('+', ' '), ''),
+            quote(self._decode_params(params), '') if params else None,
         ]))
-
-        digest = hmac.new(self.api_secret, signatureBase, sha1).digest()
+        key = bytes(self.api_secret, 'UTF-8')
+        message = bytes(signatureBase, 'UTF-8')
+        digest = hmac.new(key,message, sha1).digest()
         return base64.b64encode(digest).decode()
 
     def _query(self, method, path, params=None, retry=0):
@@ -47,7 +48,6 @@ class Infogram(object):
                 path = '/' + path
 
         params = OrderedDict(params) if params else OrderedDict()
-        #param: params[param] for param in params if params[param] is not None} if params is not None else {}
         params['api_key'] = self.api_key
 
         try:
