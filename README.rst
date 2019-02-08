@@ -8,7 +8,7 @@ Installation
 
 ::
 
-        $ pip install infogram
+        $ pip3 install infogram
 
 Usage
 -----
