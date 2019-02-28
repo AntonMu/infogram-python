@@ -1,4 +1,20 @@
-infogram-python
+READ first
+=====
+
+Right now, the code only works by manually replacing the official infogram_api.py file by the modified version here. 
+
+Steps: 
+---------------
+Install orginal python2.7 API via 
+::
+$ pip3 install infogram
+
+Then manually replace infogram_api.py by the modified version here!
+
+
+Install 
+
+infogram-python (original Readme by @gdmachado)
 ======
 
     Unofficial Python library for infogr.am API
